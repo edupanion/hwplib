@@ -6,17 +6,19 @@ public class TextExtractOption {
     private boolean withControlChar;
     private boolean appendEndingLF;
     private boolean insertParaHead;
+    private boolean insertTag;
 
     public TextExtractOption() {
         method = TextExtractMethod.InsertControlTextBetweenParagraphText;
-        withControlChar = false;
+        withControlChar = true;
         appendEndingLF = true;
         insertParaHead = true;
+        insertTag = false;
     }
 
     public TextExtractOption(TextExtractMethod method) {
         this.method = method;
-        withControlChar = false;
+        withControlChar = true;
         appendEndingLF = true;
         insertParaHead = true;
     }
@@ -25,6 +27,7 @@ public class TextExtractOption {
         this.method = that.method;
         this.withControlChar = that.withControlChar;
         this.appendEndingLF = that.appendEndingLF;
+        this.insertTag = that.insertTag;
     }
 
     public TextExtractMethod getMethod() {
@@ -57,5 +60,13 @@ public class TextExtractOption {
 
     public void setInsertParaHead(boolean insertParaHead) {
         this.insertParaHead = insertParaHead;
+    }
+
+    public boolean isInsertTag() {
+        return insertTag;
+    }
+
+    public void setInsertTag(boolean insertTag) {
+        this.insertTag = insertTag;
     }
 }

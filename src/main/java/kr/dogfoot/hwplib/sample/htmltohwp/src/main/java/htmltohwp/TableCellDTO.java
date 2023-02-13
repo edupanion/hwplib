@@ -1,4 +1,4 @@
-package htmltohwp;
+package kr.dogfoot.hwplib.sample.htmltohwp.src.main.java.htmltohwp;
 
 import lombok.ToString;
 

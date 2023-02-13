@@ -5,6 +5,7 @@ import kr.dogfoot.hwplib.object.bodytext.control.Control;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPChar;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPCharNormal;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPCharType;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.text.ParaText;
 import kr.dogfoot.hwplib.tool.textextractor.paraHead.ParaHeadMaker;
 
@@ -216,7 +217,6 @@ public class ForParagraphList {
                     case ControlExtend:
                         if (startIndex <= charIndex && charIndex <= endIndex) {
                             if (option.getMethod() == TextExtractMethod.InsertControlTextBetweenParagraphText) {
-                                sb.append("\n");
                                 ForControl.extract(p.getControlList().get(controlIndex),
                                         option,
                                         paraHeadMaker,
@@ -275,27 +275,40 @@ public class ForParagraphList {
                                  TextExtractOption option,
                                  ParaHeadMaker paraHeadMaker,
                                  StringBuffer sb) throws UnsupportedEncodingException {
-        if (option.isInsertParaHead() == true && paraHeadMaker != null) {
-            sb.append(paraHeadMaker.paraHeadString(p)).append(" ");
+        if (option.isInsertParaHead() && paraHeadMaker != null) {
+            String headString = paraHeadMaker.paraHeadString(p);
+            if (!headString.isEmpty()) {
+                sb.append("\n");
+            }
+            sb.append(headString);
         }
 
         ParaText pt = p.getText();
         if (pt != null) {
             int controlIndex = 0;
+            HWPCharType lastType = null;
             for (HWPChar ch : pt.getCharList()) {
                 switch (ch.getType()) {
                     case Normal:
+                        if (lastType != HWPCharType.Normal) {
+                            ExtractorHelper.appendNormalStartTag(option, sb);
+                        }
                         normalText(ch, sb);
                         break;
                     case ControlChar:
                     case ControlInline:
                         if (option.isWithControlChar()) {
+                            if (lastType == HWPCharType.Normal) {
+                                ExtractorHelper.appendNormalEndTag(option, sb);
+                            }
                             controlText(ch, sb);
                         }
                         break;
                     case ControlExtend:
+                        if (lastType == HWPCharType.Normal) {
+                            ExtractorHelper.appendNormalEndTag(option, sb);
+                        }
                         if (option.getMethod() == TextExtractMethod.InsertControlTextBetweenParagraphText) {
-                            sb.append("\n");
                             ForControl.extract(p.getControlList().get(controlIndex),
                                     option,
                                     paraHeadMaker,
@@ -306,9 +319,10 @@ public class ForParagraphList {
                     default:
                         break;
                 }
+                lastType = ch.getType();
             }
             if (option.isAppendEndingLF()) {
-                sb.append("\n");
+                sb.append("\n").append("<br>").append("\n");
             }
         }
         if (option.getMethod() == TextExtractMethod.AppendControlTextAfterParagraphText) {

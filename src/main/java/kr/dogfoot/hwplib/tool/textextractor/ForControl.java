@@ -53,23 +53,23 @@ public class ForControl {
                     ForGso.extract((GsoControl) c, option, paraHeadMaker, sb);
                     break;
                 case Equation:
-                    equation((ControlEquation) c, sb);
+                    equation((ControlEquation) c, option, sb);
                     break;
                 case SectionDefine:
                     break;
                 case ColumnDefine:
                     break;
                 case Header:
-                    header((ControlHeader) c, option, paraHeadMaker, sb);
+//                    header((ControlHeader) c, option, paraHeadMaker, sb);
                     break;
                 case Footer:
-                    footer((ControlFooter) c, option, paraHeadMaker, sb);
+//                    footer((ControlFooter) c, option, paraHeadMaker, sb);
                     break;
                 case Footnote:
-                    footnote((ControlFootnote) c, option, paraHeadMaker, sb);
+//                    footnote((ControlFootnote) c, option, paraHeadMaker, sb);
                     break;
                 case Endnote:
-                    endnote((ControlEndnote) c, option, paraHeadMaker, sb);
+//                    endnote((ControlEndnote) c, option, paraHeadMaker, sb);
                     break;
                 case AutoNumber:
                     break;
@@ -112,11 +112,17 @@ public class ForControl {
                               TextExtractOption option,
                               ParaHeadMaker paraHeadMaker,
                               StringBuffer sb) throws UnsupportedEncodingException {
+        StringBuffer stringBuffer = new StringBuffer();
         for (Row r : table.getRowList()) {
+            ExtractorHelper.insertTag(option, stringBuffer, "<tr>\n");
             for (Cell c : r.getCellList()) {
-                ForParagraphList.extract(c.getParagraphList(), option, paraHeadMaker, sb);
+                ExtractorHelper.insertTag(option, stringBuffer, "<td>\n");
+                ForParagraphList.extract(c.getParagraphList(), option, paraHeadMaker, stringBuffer);
+                ExtractorHelper.insertTag(option, stringBuffer, "</td>\n");
             }
+            ExtractorHelper.insertTag(option, stringBuffer, "</tr>\n");
         }
+        ExtractorHelper.appendTableTag(option, sb, stringBuffer.toString());
     }
 
     /**
@@ -125,8 +131,8 @@ public class ForControl {
      * @param equation 수식 컨트롤 객체
      * @param sb       추출된 텍스트를 저정할 StringBuffer 객체
      */
-    private static void equation(ControlEquation equation, StringBuffer sb) {
-        sb.append(equation.getEQEdit().getScript().toUTF16LEString()).append("\n");
+    private static void equation(ControlEquation equation, TextExtractOption option, StringBuffer sb) {
+        ExtractorHelper.appendEquationTag(option, sb, equation.getEQEdit().getScript().toUTF16LEString());
     }
 
     /**

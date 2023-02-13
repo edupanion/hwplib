@@ -60,6 +60,7 @@ public class ForGso {
                 curve((ControlCurve) gc, option, paraHeadMaker, sb);
                 break;
             case Picture:
+                picture((ControlPicture) gc, option, paraHeadMaker, sb);
                 break;
             case OLE:
                 break;
@@ -187,5 +188,22 @@ public class ForGso {
         for (GsoControl child : container.getChildControlList()) {
             extract(child, option, paraHeadMaker, sb);
         }
+    }
+
+    /**
+     * 이미지 개체에서 텍스트를 추출한다.
+     *
+     * @param container     묶음 개체
+     * @param option        추출 옵션
+     * @param paraHeadMaker 문단 번호/글머리표 생성기
+     * @param sb            추출된 텍스트를 저정할 StringBuffer 객체
+     * @throws UnsupportedEncodingException
+     */
+    private static void picture(ControlPicture container,
+                                TextExtractOption option,
+                                ParaHeadMaker paraHeadMaker,
+                                StringBuffer sb) throws UnsupportedEncodingException {
+        int binItemId = container.getShapeComponentPicture().getPictureInfo().getBinItemID();
+        ExtractorHelper.appendImageTag(option, sb, binItemId);
     }
 }

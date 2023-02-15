@@ -322,7 +322,10 @@ public class ForParagraphList {
                 lastType = ch.getType();
             }
             if (option.isAppendEndingLF()) {
-                sb.append("\n").append("<br>").append("\n");
+                sb.append("\n");
+                if (option.isInsertTag()) {
+                    sb.append("<br>").append("\n");
+                }
             }
         }
         if (option.getMethod() == TextExtractMethod.AppendControlTextAfterParagraphText) {

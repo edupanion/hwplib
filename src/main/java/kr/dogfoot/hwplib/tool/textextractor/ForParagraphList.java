@@ -322,14 +322,20 @@ public class ForParagraphList {
                 lastType = ch.getType();
             }
             if (option.isAppendEndingLF()) {
-                sb.append("\n");
-                if (option.isInsertTag()) {
-                    sb.append("<br>").append("\n");
-                }
+                addNewLine(option, sb);
             }
+        } else {
+            addNewLine(option, sb);
         }
         if (option.getMethod() == TextExtractMethod.AppendControlTextAfterParagraphText) {
             controls(p.getControlList(), option, paraHeadMaker, sb);
+        }
+    }
+
+    private static void addNewLine(TextExtractOption option, StringBuffer sb) {
+        sb.append("\n");
+        if (option.isInsertTag()) {
+            sb.append("<br>").append("\n");
         }
     }
 

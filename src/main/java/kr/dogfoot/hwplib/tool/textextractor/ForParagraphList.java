@@ -211,7 +211,7 @@ public class ForParagraphList {
                     case ControlChar:
                     case ControlInline:
                         if (option.isWithControlChar()) {
-                            controlText(ch, sb);
+                            controlText(ch, option, sb);
                         }
                         break;
                     case ControlExtend:
@@ -301,7 +301,7 @@ public class ForParagraphList {
                             if (lastType == HWPCharType.Normal) {
                                 ExtractorHelper.appendNormalEndTag(option, sb);
                             }
-                            controlText(ch, sb);
+                            controlText(ch, option, sb);
                         }
                         break;
                     case ControlExtend:
@@ -321,9 +321,6 @@ public class ForParagraphList {
                 }
                 lastType = ch.getType();
             }
-            if (option.isAppendEndingLF()) {
-                addNewLine(option, sb);
-            }
         } else {
             addNewLine(option, sb);
         }
@@ -333,10 +330,10 @@ public class ForParagraphList {
     }
 
     private static void addNewLine(TextExtractOption option, StringBuffer sb) {
-        sb.append("\n");
         if (option.isInsertTag()) {
-            sb.append("<br>").append("\n");
+            sb.append("<br>");
         }
+        sb.append("\n");
     }
 
     /**
@@ -350,13 +347,19 @@ public class ForParagraphList {
         sb.append(((HWPCharNormal) ch).getCh());
     }
 
-    private static void controlText(HWPChar ch, StringBuffer sb) {
+    private static void controlText(HWPChar ch, TextExtractOption option, StringBuffer sb) {
         switch (ch.getCode()) {
             case 9:
+                if (option.isInsertTag()) {
+                    ExtractorHelper.appendNormalStartTag(option, sb);
+                }
                 sb.append("\t");
+                if (option.isInsertTag()) {
+                    ExtractorHelper.appendNormalEndTag(option, sb);
+                }
                 break;
-            case 10:
-                sb.append("\r\n");
+            case 13:
+                addNewLine(option, sb);
                 break;
             case 24:
                 sb.append("_");

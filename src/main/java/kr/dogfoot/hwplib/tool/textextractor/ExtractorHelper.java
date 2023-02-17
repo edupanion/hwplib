@@ -3,7 +3,7 @@ package kr.dogfoot.hwplib.tool.textextractor;
 public class ExtractorHelper {
 
     public static void appendNormalStartTag(TextExtractOption option, StringBuffer sb) {
-        insertTag(option, sb, "<span  style=\"white-space: pre;\">");
+        insertTag(option, sb, "<span style=\"white-space: pre;\">");
     }
 
     public static void appendNormalEndTag(TextExtractOption option, StringBuffer sb) {

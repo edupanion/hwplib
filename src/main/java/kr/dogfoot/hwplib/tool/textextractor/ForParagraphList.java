@@ -3,6 +3,7 @@ package kr.dogfoot.hwplib.tool.textextractor;
 import kr.dogfoot.hwplib.object.bodytext.ParagraphListInterface;
 import kr.dogfoot.hwplib.object.bodytext.control.Control;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPChar;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPCharNormal;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPCharType;
@@ -11,6 +12,8 @@ import kr.dogfoot.hwplib.tool.textextractor.paraHead.ParaHeadMaker;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 문단 리스트를 위한 텍스트 추출기 객체
@@ -285,13 +288,30 @@ public class ForParagraphList {
 
         ParaText pt = p.getText();
         if (pt != null) {
+            final ArrayList<CharPositionShapeIdPair> charShapeList = p.getCharShape().getPositonShapeIdPairList();
             int controlIndex = 0;
             HWPCharType lastType = null;
-            for (HWPChar ch : pt.getCharList()) {
+            boolean underline = false;
+            for (int i = 0; i < pt.getCharList().size(); i++) {
+                final HWPChar ch = pt.getCharList().get(i);
                 switch (ch.getType()) {
                     case Normal:
                         if (lastType != HWPCharType.Normal) {
                             ExtractorHelper.appendNormalStartTag(option, sb);
+                        }
+                        final int index = i;
+                        final List<CharPositionShapeIdPair> shapeList = charShapeList.stream().filter((charShape) -> charShape.getPosition() == index).collect(Collectors.toList());
+                        if (!shapeList.isEmpty()) {
+                            final CharPositionShapeIdPair shape = shapeList.get(0);
+                            final boolean isUnderLine = DocInfoExtractor.isUnderLine(shape.getShapeId());
+                            if (underline != isUnderLine) {
+                                underline = isUnderLine;
+                                if (underline) {
+                                    ExtractorHelper.insertTag(option, sb, "<u>");
+                                } else {
+                                    ExtractorHelper.insertTag(option, sb, "</u>");
+                                }
+                            }
                         }
                         normalText(ch, sb);
                         break;
@@ -299,14 +319,14 @@ public class ForParagraphList {
                     case ControlInline:
                         if (option.isWithControlChar()) {
                             if (lastType == HWPCharType.Normal) {
-                                ExtractorHelper.appendNormalEndTag(option, sb);
+                                addEndTag(option, sb, underline);
                             }
                             controlText(ch, option, sb);
                         }
                         break;
                     case ControlExtend:
                         if (lastType == HWPCharType.Normal) {
-                            ExtractorHelper.appendNormalEndTag(option, sb);
+                            addEndTag(option, sb, underline);
                         }
                         if (option.getMethod() == TextExtractMethod.InsertControlTextBetweenParagraphText) {
                             ForControl.extract(p.getControlList().get(controlIndex),
@@ -334,6 +354,13 @@ public class ForParagraphList {
             sb.append("<br>");
         }
         sb.append("\n");
+    }
+
+    private static void addEndTag(TextExtractOption option, StringBuffer sb, boolean underline) {
+        if (underline) {
+            ExtractorHelper.insertTag(option, sb, "</u>");
+        }
+        ExtractorHelper.appendNormalEndTag(option, sb);
     }
 
     /**

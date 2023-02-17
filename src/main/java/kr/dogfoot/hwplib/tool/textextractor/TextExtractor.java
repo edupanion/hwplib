@@ -37,6 +37,7 @@ public class TextExtractor {
         ParaHeadMaker paraHeadMaker = new ParaHeadMaker(hwpFile);
         for (Section s : hwpFile.getBodyText().getSectionList()) {
             paraHeadMaker.startSection(s);
+            DocInfoExtractor.extract(hwpFile.getDocInfo());
             ForParagraphList.extract(s, option, paraHeadMaker, sb);
             paraHeadMaker.endSection();
         }

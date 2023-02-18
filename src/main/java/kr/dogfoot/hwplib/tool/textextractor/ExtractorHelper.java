@@ -17,7 +17,7 @@ public class ExtractorHelper {
     }
 
     public static void appendTableTag(TextExtractOption option, StringBuffer sb, String data) {
-        insertTag(option, sb, "\n<br>\n<table border=\"1\" cellpadding=\"20px\">\n");
+        insertTag(option, sb, "\n<br>\n<table>\n");
         sb.append(data);
         insertTag(option, sb, "</table>");
     }

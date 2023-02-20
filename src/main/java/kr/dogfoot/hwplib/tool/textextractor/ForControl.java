@@ -116,7 +116,7 @@ public class ForControl {
         for (Row r : table.getRowList()) {
             ExtractorHelper.insertTag(option, stringBuffer, "<tr>\n");
             for (Cell c : r.getCellList()) {
-                ExtractorHelper.insertTag(option, stringBuffer, "<td>\n");
+                ExtractorHelper.insertTag(option, stringBuffer, "<td colspan=\"" + c.getListHeader().getColSpan() + "\" rowspan=\"" + c.getListHeader().getRowSpan() + "\">\n");
                 ForParagraphList.extract(c.getParagraphList(), option, paraHeadMaker, stringBuffer);
                 ExtractorHelper.insertTag(option, stringBuffer, "</td>\n");
             }

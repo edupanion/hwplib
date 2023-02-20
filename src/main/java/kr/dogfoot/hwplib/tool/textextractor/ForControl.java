@@ -4,7 +4,9 @@ import kr.dogfoot.hwplib.object.bodytext.control.*;
 import kr.dogfoot.hwplib.object.bodytext.control.gso.GsoControl;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
+import kr.dogfoot.hwplib.object.etc.Color4Byte;
 import kr.dogfoot.hwplib.tool.textextractor.paraHead.ParaHeadMaker;
+import kr.dogfoot.hwplib.util.ColorUtil;
 
 import java.io.UnsupportedEncodingException;
 
@@ -116,7 +118,8 @@ public class ForControl {
         for (Row r : table.getRowList()) {
             ExtractorHelper.insertTag(option, stringBuffer, "<tr>\n");
             for (Cell c : r.getCellList()) {
-                ExtractorHelper.insertTag(option, stringBuffer, "<td colspan=\"" + c.getListHeader().getColSpan() + "\" rowspan=\"" + c.getListHeader().getRowSpan() + "\">\n");
+                Color4Byte color = DocInfoExtractor.getCellBackgroundColor(c.getListHeader().getBorderFillId());
+                ExtractorHelper.insertTag(option, stringBuffer, "<td style=\"background-color:" + ColorUtil.convertToString(color) + ";\" colspan=\"" + c.getListHeader().getColSpan() + "\" rowspan=\"" + c.getListHeader().getRowSpan() + "\">\n");
                 ForParagraphList.extract(c.getParagraphList(), option, paraHeadMaker, stringBuffer);
                 ExtractorHelper.insertTag(option, stringBuffer, "</td>\n");
             }

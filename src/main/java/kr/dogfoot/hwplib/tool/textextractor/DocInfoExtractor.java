@@ -3,9 +3,11 @@ package kr.dogfoot.hwplib.tool.textextractor;
 import kr.dogfoot.hwplib.object.docinfo.BorderFill;
 import kr.dogfoot.hwplib.object.docinfo.CharShape;
 import kr.dogfoot.hwplib.object.docinfo.DocInfo;
+import kr.dogfoot.hwplib.object.docinfo.ParaShape;
 import kr.dogfoot.hwplib.object.docinfo.borderfill.BorderType;
 import kr.dogfoot.hwplib.object.docinfo.borderfill.fillinfo.PatternFill;
 import kr.dogfoot.hwplib.object.docinfo.borderfill.fillinfo.PatternType;
+import kr.dogfoot.hwplib.object.docinfo.parashape.Alignment;
 import kr.dogfoot.hwplib.object.etc.Color4Byte;
 
 import java.util.ArrayList;
@@ -13,10 +15,12 @@ import java.util.ArrayList;
 public class DocInfoExtractor {
     private static final ArrayList<CharShape> charShapeList = new ArrayList<>();
     private static final ArrayList<BorderFill> borderFillList = new ArrayList<>();
+    private static final ArrayList<ParaShape> paraShapeList = new ArrayList<>();
 
     public static void extract(DocInfo doc) {
         charShapeList.addAll(doc.getCharShapeList());
         borderFillList.addAll(doc.getBorderFillList());
+        paraShapeList.addAll(doc.getParaShapeList());
     }
 
     public static boolean isUnderLine(long shapeId) {
@@ -73,6 +77,14 @@ public class DocInfoExtractor {
             return false;
         }
         return borderFill.getBottomBorder().getType() == BorderType.None;
+    }
+
+    public static boolean isAlignLeft(int paraShapeId) {
+        return paraShapeList.get(paraShapeId).getProperty1().getAlignment() == Alignment.Left;
+    }
+
+    public static boolean isAlignRight(int paraShapeId) {
+        return paraShapeList.get(paraShapeId).getProperty1().getAlignment() == Alignment.Right;
     }
 
     private static PatternFill getPatternFill(long fillId) {

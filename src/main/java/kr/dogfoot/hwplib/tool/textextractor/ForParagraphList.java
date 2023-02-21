@@ -288,7 +288,12 @@ public class ForParagraphList {
 
         ParaText pt = p.getText();
         if (pt != null) {
-            sb.append("<p style=\"margin: 0px 0px 0px 0px; line-height: 160.0%;\">\n");
+            final boolean isAlignRight = DocInfoExtractor.isAlignRight(p.getHeader().getParaShapeId());
+            sb.append("<p style=\"margin: 0px 0px 0px 0px; line-height: 160.0%;");
+            if (isAlignRight) {
+                sb.append(" text-align: right;");
+            }
+            sb.append("\">\n");
             final ArrayList<CharPositionShapeIdPair> charShapeList = p.getCharShape().getPositonShapeIdPairList();
             int controlIndex = 0;
             HWPCharType lastType = null;

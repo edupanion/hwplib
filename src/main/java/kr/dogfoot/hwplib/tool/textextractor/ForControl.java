@@ -123,7 +123,7 @@ public class ForControl {
                 boolean alignCenter = false;
                 final int lines = c.getParagraphList().getParagraphs().length;
                 if (lines == 1) {
-                    final ParaText paraText = c.getParagraphList().getParagraphs()[0].getText();
+                    final ParaText paraText = c.getParagraphList().getParagraph(0).getText();
                     if (paraText != null) {
                         alignCenter = paraText.getCharList().stream().noneMatch(HWPChar::isHangul);
                     }

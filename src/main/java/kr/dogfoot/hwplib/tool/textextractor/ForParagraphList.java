@@ -288,6 +288,7 @@ public class ForParagraphList {
 
         ParaText pt = p.getText();
         if (pt != null) {
+            sb.append("<p style=\"margin: 0px 0px 0px 0px; line-height: 160.0%;\">\n");
             final ArrayList<CharPositionShapeIdPair> charShapeList = p.getCharShape().getPositonShapeIdPairList();
             int controlIndex = 0;
             HWPCharType lastType = null;
@@ -341,6 +342,7 @@ public class ForParagraphList {
                 }
                 lastType = ch.getType();
             }
+            sb.append("</p>\n");
         } else {
             addNewLine(option, sb);
         }

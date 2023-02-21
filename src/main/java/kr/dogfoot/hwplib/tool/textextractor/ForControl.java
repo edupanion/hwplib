@@ -11,7 +11,6 @@ import kr.dogfoot.hwplib.tool.textextractor.paraHead.ParaHeadMaker;
 import kr.dogfoot.hwplib.util.ColorUtil;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
 /**
  * 컨트롤을 위한 텍스트 추출기 객체
@@ -140,7 +139,8 @@ public class ForControl {
                         .append(" border-left: ").append((isLeftBorderEmpty ? 0 : "1px solid #000000")).append(";")
                         .append(" border-top: ").append((isTopBorderEmpty ? 0 : "1px solid #000000")).append(";")
                         .append(" border-right: ").append((isRightBorderEmpty ? 0 : "1px solid #000000")).append(";")
-                        .append(" border-bottom: ").append((isBottomBorderEmpty ? 0 : "1px solid #000000")).append(";");
+                        .append(" border-bottom: ").append((isBottomBorderEmpty ? 0 : "1px solid #000000")).append(";")
+                        .append(" vertical-align: middle;");
                 if (alignCenter) {
                     tabBuilder.append(" text-align: center;");
                 }

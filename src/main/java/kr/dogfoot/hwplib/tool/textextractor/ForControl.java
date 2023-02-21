@@ -4,11 +4,14 @@ import kr.dogfoot.hwplib.object.bodytext.control.*;
 import kr.dogfoot.hwplib.object.bodytext.control.gso.GsoControl;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPChar;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.text.ParaText;
 import kr.dogfoot.hwplib.object.etc.Color4Byte;
 import kr.dogfoot.hwplib.tool.textextractor.paraHead.ParaHeadMaker;
 import kr.dogfoot.hwplib.util.ColorUtil;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 /**
  * 컨트롤을 위한 텍스트 추출기 객체
@@ -118,6 +121,14 @@ public class ForControl {
         for (Row r : table.getRowList()) {
             ExtractorHelper.insertTag(option, stringBuffer, "<tr>\n");
             for (Cell c : r.getCellList()) {
+                boolean alignCenter = false;
+                final int lines = c.getParagraphList().getParagraphs().length;
+                if (lines == 1) {
+                    final ParaText paraText = c.getParagraphList().getParagraphs()[0].getText();
+                    if (paraText != null) {
+                        alignCenter = paraText.getCharList().stream().noneMatch(HWPChar::isHangul);
+                    }
+                }
                 Color4Byte color = DocInfoExtractor.getCellBackgroundColor(c.getListHeader().getBorderFillId());
                 final boolean isLeftBorderEmpty = DocInfoExtractor.isLeftBorderEmpty(c.getListHeader().getBorderFillId());
                 final boolean isRightBorderEmpty = DocInfoExtractor.isRightBorderEmpty(c.getListHeader().getBorderFillId());
@@ -125,12 +136,15 @@ public class ForControl {
                 final boolean isBottomBorderEmpty = DocInfoExtractor.isBottomBorderEmpty(c.getListHeader().getBorderFillId());
                 final StringBuilder tabBuilder = new StringBuilder();
                 tabBuilder.append("<td style=\"")
-                        .append("background-color:").append(ColorUtil.convertToString(color)).append(";")
-                        .append(" border-left:").append((isLeftBorderEmpty ? 0 : "1px solid #000000")).append(";")
-                        .append(" border-top:").append((isTopBorderEmpty ? 0 : "1px solid #000000")).append(";")
-                        .append(" border-right:").append((isRightBorderEmpty ? 0 : "1px solid #000000")).append(";")
-                        .append(" border-bottom:").append((isBottomBorderEmpty ? 0 : "1px solid #000000")).append(";")
-                        .append("\" colspan=\"").append(c.getListHeader().getColSpan())
+                        .append("background-color: ").append(ColorUtil.convertToString(color)).append(";")
+                        .append(" border-left: ").append((isLeftBorderEmpty ? 0 : "1px solid #000000")).append(";")
+                        .append(" border-top: ").append((isTopBorderEmpty ? 0 : "1px solid #000000")).append(";")
+                        .append(" border-right: ").append((isRightBorderEmpty ? 0 : "1px solid #000000")).append(";")
+                        .append(" border-bottom: ").append((isBottomBorderEmpty ? 0 : "1px solid #000000")).append(";");
+                if (alignCenter) {
+                    tabBuilder.append(" text-align: center;");
+                }
+                tabBuilder.append("\" colspan=\"").append(c.getListHeader().getColSpan())
                         .append("\" rowspan=\"").append(c.getListHeader().getRowSpan())
                         .append("\">\n");
                 ExtractorHelper.insertTag(option, stringBuffer, tabBuilder.toString());

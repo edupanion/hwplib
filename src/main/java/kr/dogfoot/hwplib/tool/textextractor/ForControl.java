@@ -119,7 +119,21 @@ public class ForControl {
             ExtractorHelper.insertTag(option, stringBuffer, "<tr>\n");
             for (Cell c : r.getCellList()) {
                 Color4Byte color = DocInfoExtractor.getCellBackgroundColor(c.getListHeader().getBorderFillId());
-                ExtractorHelper.insertTag(option, stringBuffer, "<td style=\"background-color:" + ColorUtil.convertToString(color) + ";\" colspan=\"" + c.getListHeader().getColSpan() + "\" rowspan=\"" + c.getListHeader().getRowSpan() + "\">\n");
+                final boolean isLeftBorderEmpty = DocInfoExtractor.isLeftBorderEmpty(c.getListHeader().getBorderFillId());
+                final boolean isRightBorderEmpty = DocInfoExtractor.isRightBorderEmpty(c.getListHeader().getBorderFillId());
+                final boolean isTopBorderEmpty = DocInfoExtractor.isTopBorderEmpty(c.getListHeader().getBorderFillId());
+                final boolean isBottomBorderEmpty = DocInfoExtractor.isBottomBorderEmpty(c.getListHeader().getBorderFillId());
+                final StringBuilder tabBuilder = new StringBuilder();
+                tabBuilder.append("<td style=\"")
+                        .append("background-color:").append(ColorUtil.convertToString(color)).append(";")
+                        .append(" border-left:").append((isLeftBorderEmpty ? 0 : "1px solid #000000")).append(";")
+                        .append(" border-top:").append((isTopBorderEmpty ? 0 : "1px solid #000000")).append(";")
+                        .append(" border-right:").append((isRightBorderEmpty ? 0 : "1px solid #000000")).append(";")
+                        .append(" border-bottom:").append((isBottomBorderEmpty ? 0 : "1px solid #000000")).append(";")
+                        .append("\" colspan=\"").append(c.getListHeader().getColSpan())
+                        .append("\" rowspan=\"").append(c.getListHeader().getRowSpan())
+                        .append("\">\n");
+                ExtractorHelper.insertTag(option, stringBuffer, tabBuilder.toString());
                 ForParagraphList.extract(c.getParagraphList(), option, paraHeadMaker, stringBuffer);
                 ExtractorHelper.insertTag(option, stringBuffer, "</td>\n");
             }

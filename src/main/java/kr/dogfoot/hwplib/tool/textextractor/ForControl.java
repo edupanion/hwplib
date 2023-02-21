@@ -128,13 +128,23 @@ public class ForControl {
                         alignCenter = paraText.getCharList().stream().noneMatch(HWPChar::isHangul);
                     }
                 }
-                Color4Byte color = DocInfoExtractor.getCellBackgroundColor(c.getListHeader().getBorderFillId());
-                final boolean isLeftBorderEmpty = DocInfoExtractor.isLeftBorderEmpty(c.getListHeader().getBorderFillId());
-                final boolean isRightBorderEmpty = DocInfoExtractor.isRightBorderEmpty(c.getListHeader().getBorderFillId());
-                final boolean isTopBorderEmpty = DocInfoExtractor.isTopBorderEmpty(c.getListHeader().getBorderFillId());
-                final boolean isBottomBorderEmpty = DocInfoExtractor.isBottomBorderEmpty(c.getListHeader().getBorderFillId());
+                final long borderFillId = c.getListHeader().getBorderFillId();
+                boolean hasSlash = DocInfoExtractor.hasSlash(borderFillId);
+                boolean hasBackSlash = DocInfoExtractor.hasBackSlash(borderFillId);
+                Color4Byte color = DocInfoExtractor.getCellBackgroundColor(borderFillId);
+                final boolean isLeftBorderEmpty = DocInfoExtractor.isLeftBorderEmpty(borderFillId);
+                final boolean isRightBorderEmpty = DocInfoExtractor.isRightBorderEmpty(borderFillId);
+                final boolean isTopBorderEmpty = DocInfoExtractor.isTopBorderEmpty(borderFillId);
+                final boolean isBottomBorderEmpty = DocInfoExtractor.isBottomBorderEmpty(borderFillId);
                 final StringBuilder tabBuilder = new StringBuilder();
-                tabBuilder.append("<td style=\"")
+                tabBuilder.append("<td");
+                if (hasSlash) {
+                    tabBuilder.append(" class=\"slash\"");
+                }
+                if (hasBackSlash) {
+                    tabBuilder.append(" class=\"backslash\"");
+                }
+                tabBuilder.append(" style=\"")
                         .append("background-color: ").append(ColorUtil.convertToString(color)).append(";")
                         .append(" border-left: ").append((isLeftBorderEmpty ? 0 : "1px solid #000000")).append(";")
                         .append(" border-top: ").append((isTopBorderEmpty ? 0 : "1px solid #000000")).append(";")

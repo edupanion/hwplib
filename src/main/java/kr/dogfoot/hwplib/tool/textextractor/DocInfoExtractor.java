@@ -4,9 +4,10 @@ import kr.dogfoot.hwplib.object.docinfo.BorderFill;
 import kr.dogfoot.hwplib.object.docinfo.CharShape;
 import kr.dogfoot.hwplib.object.docinfo.DocInfo;
 import kr.dogfoot.hwplib.object.docinfo.ParaShape;
+import kr.dogfoot.hwplib.object.docinfo.borderfill.BackSlashDiagonalShape;
 import kr.dogfoot.hwplib.object.docinfo.borderfill.BorderType;
+import kr.dogfoot.hwplib.object.docinfo.borderfill.SlashDiagonalShape;
 import kr.dogfoot.hwplib.object.docinfo.borderfill.fillinfo.PatternFill;
-import kr.dogfoot.hwplib.object.docinfo.borderfill.fillinfo.PatternType;
 import kr.dogfoot.hwplib.object.docinfo.parashape.Alignment;
 import kr.dogfoot.hwplib.object.etc.Color4Byte;
 
@@ -39,12 +40,18 @@ public class DocInfoExtractor {
         return fillInfo.getBackColor();
     }
 
-    public static boolean hasVerticalLine(long fillId) {
-        final PatternFill fillInfo = getPatternFill(fillId);
-        if (fillInfo == null) {
+    public static boolean hasSlash(long fillId) {
+        if (borderFillList.size() < fillId) {
             return false;
         }
-        return fillInfo.getPatternType() == PatternType.VerticalLine;
+        return borderFillList.get((int) fillId - 1).getProperty().getSlashDiagonalShape() == SlashDiagonalShape.Slash;
+    }
+
+    public static boolean hasBackSlash(long fillId) {
+        if (borderFillList.size() < fillId) {
+            return false;
+        }
+        return borderFillList.get((int) fillId - 1).getProperty().getBackSlashDiagonalShape() == BackSlashDiagonalShape.BackSlash;
     }
 
     public static boolean isLeftBorderEmpty(long fillId) {

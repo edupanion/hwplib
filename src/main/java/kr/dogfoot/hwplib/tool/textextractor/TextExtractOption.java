@@ -13,7 +13,7 @@ public class TextExtractOption {
         withControlChar = true;
         appendEndingLF = true;
         insertParaHead = true;
-        insertTag = false;
+        insertTag = true;
     }
 
     public TextExtractOption(TextExtractMethod method) {

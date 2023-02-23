@@ -386,6 +386,8 @@ public class ForParagraphList {
 
     private static void controlText(HWPChar ch, TextExtractOption option, StringBuffer sb) {
         switch (ch.getCode()) {
+            case 10:
+                addNewLine(option, sb);
             case 9:
                 if (option.isInsertTag()) {
                     ExtractorHelper.appendNormalStartTag(option, sb);

@@ -94,6 +94,10 @@ public class DocInfoExtractor {
         return paraShapeList.get(paraShapeId).getProperty1().getAlignment() == Alignment.Right;
     }
 
+    public static boolean isAlignCenter(int paraShapeId) {
+        return paraShapeList.get(paraShapeId).getProperty1().getAlignment() == Alignment.Center;
+    }
+
     private static PatternFill getPatternFill(long fillId) {
         if (borderFillList.size() < fillId) {
             return null;

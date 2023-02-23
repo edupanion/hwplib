@@ -4,8 +4,6 @@ import kr.dogfoot.hwplib.object.bodytext.control.*;
 import kr.dogfoot.hwplib.object.bodytext.control.gso.GsoControl;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPChar;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.text.ParaText;
 import kr.dogfoot.hwplib.object.etc.Color4Byte;
 import kr.dogfoot.hwplib.tool.textextractor.paraHead.ParaHeadMaker;
 import kr.dogfoot.hwplib.util.ColorUtil;
@@ -120,14 +118,6 @@ public class ForControl {
         for (Row r : table.getRowList()) {
             ExtractorHelper.insertTag(option, stringBuffer, "<tr>\n");
             for (Cell c : r.getCellList()) {
-                boolean alignCenter = false;
-                final int lines = c.getParagraphList().getParagraphs().length;
-                if (lines == 1) {
-                    final ParaText paraText = c.getParagraphList().getParagraph(0).getText();
-                    if (paraText != null) {
-                        alignCenter = paraText.getCharList().stream().noneMatch(HWPChar::isHangul);
-                    }
-                }
                 final long borderFillId = c.getListHeader().getBorderFillId();
                 boolean hasSlash = DocInfoExtractor.hasSlash(borderFillId);
                 boolean hasBackSlash = DocInfoExtractor.hasBackSlash(borderFillId);
@@ -150,11 +140,8 @@ public class ForControl {
                         .append(" border-top: ").append((isTopBorderEmpty ? 0 : "1px solid #000000")).append(";")
                         .append(" border-right: ").append((isRightBorderEmpty ? 0 : "1px solid #000000")).append(";")
                         .append(" border-bottom: ").append((isBottomBorderEmpty ? 0 : "1px solid #000000")).append(";")
-                        .append(" vertical-align: middle;");
-                if (alignCenter) {
-                    tabBuilder.append(" text-align: center;");
-                }
-                tabBuilder.append("\" colspan=\"").append(c.getListHeader().getColSpan())
+                        .append(" vertical-align: middle;")
+                        .append("\" colspan=\"").append(c.getListHeader().getColSpan())
                         .append("\" rowspan=\"").append(c.getListHeader().getRowSpan())
                         .append("\">\n");
                 ExtractorHelper.insertTag(option, stringBuffer, tabBuilder.toString());

@@ -98,6 +98,14 @@ public class DocInfoExtractor {
         return paraShapeList.get(paraShapeId).getProperty1().getAlignment() == Alignment.Center;
     }
 
+    public static int getIndent(int paraShapeId) {
+        return paraShapeList.get(paraShapeId).getIndent();
+    }
+
+    public static int getLeftMargin(int paraShapeId) {
+        return paraShapeList.get(paraShapeId).getLeftMargin();
+    }
+
     private static PatternFill getPatternFill(long fillId) {
         if (borderFillList.size() < fillId) {
             return null;

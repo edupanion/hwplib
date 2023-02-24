@@ -288,8 +288,21 @@ public class ForParagraphList {
 
         ParaText pt = p.getText();
         if (pt != null) {
-            final boolean isAlignRight = DocInfoExtractor.isAlignRight(p.getHeader().getParaShapeId());
-            final boolean isAlignCenter = DocInfoExtractor.isAlignCenter(p.getHeader().getParaShapeId());
+            final int shapeId = p.getHeader().getParaShapeId();
+            final int indent = DocInfoExtractor.getIndent(shapeId);
+            final int leftMargin = DocInfoExtractor.getLeftMargin(shapeId);
+            final boolean isAlignRight = DocInfoExtractor.isAlignRight(shapeId);
+            final boolean isAlignCenter = DocInfoExtractor.isAlignCenter(shapeId);
+            final List<String> text = pt.getCharList().stream()
+                    .filter(it -> it instanceof HWPCharNormal)
+                    .map(it -> {
+                        try {
+                            return ((HWPCharNormal) it).getCh();
+                        } catch (UnsupportedEncodingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .collect(Collectors.toList());
             sb.append("<p style=\"margin: 0px 0px 0px 0px; line-height: 160.0%;");
             if (isAlignRight) {
                 sb.append(" text-align: right;");
@@ -298,11 +311,20 @@ public class ForParagraphList {
             }
             sb.append("\">\n");
             final ArrayList<CharPositionShapeIdPair> charShapeList = p.getCharShape().getPositonShapeIdPairList();
-            int controlIndex = 0;
             HWPCharType lastType = null;
+            int controlIndex = 0;
+            int line = 0;
             boolean underline = false;
+            boolean isFirstChildOfLine = true;
             for (int i = 0; i < pt.getCharList().size(); i++) {
                 final HWPChar ch = pt.getCharList().get(i);
+                if (isFirstChildOfLine) {
+                    int marginLeft = (line == 0 ? leftMargin : leftMargin - indent) / 150;
+                    if (marginLeft > 0) {
+                        ExtractorHelper.appendMarginTag(option, sb, marginLeft);
+                    }
+                    isFirstChildOfLine = false;
+                }
                 switch (ch.getType()) {
                     case Normal:
                         if (lastType != HWPCharType.Normal) {
@@ -328,14 +350,18 @@ public class ForParagraphList {
                     case ControlInline:
                         if (option.isWithControlChar()) {
                             if (lastType == HWPCharType.Normal) {
-                                addEndTag(option, sb, underline);
+                                addUnderLineEndTag(option, sb, underline);
+                            }
+                            if (ch.isLineBreak()) {
+                                line++;
+                                isFirstChildOfLine = true;
                             }
                             controlText(ch, option, sb);
                         }
                         break;
                     case ControlExtend:
                         if (lastType == HWPCharType.Normal) {
-                            addEndTag(option, sb, underline);
+                            addUnderLineEndTag(option, sb, underline);
                         }
                         if (option.getMethod() == TextExtractMethod.InsertControlTextBetweenParagraphText) {
                             ForControl.extract(p.getControlList().get(controlIndex),
@@ -350,23 +376,29 @@ public class ForParagraphList {
                 }
                 lastType = ch.getType();
             }
-            sb.append("</p>\n");
         } else {
-            addNewLine(option, sb);
+            addNewLineTag(option, sb);
         }
         if (option.getMethod() == TextExtractMethod.AppendControlTextAfterParagraphText) {
             controls(p.getControlList(), option, paraHeadMaker, sb);
         }
     }
 
-    private static void addNewLine(TextExtractOption option, StringBuffer sb) {
+    private static void addNewLineTag(TextExtractOption option, StringBuffer sb) {
         if (option.isInsertTag()) {
             sb.append("<br>");
         }
         sb.append("\n");
     }
 
-    private static void addEndTag(TextExtractOption option, StringBuffer sb, boolean underline) {
+    private static void addParaEndTag(TextExtractOption option, StringBuffer sb) {
+        if (option.isInsertTag()) {
+            sb.append("</p>");
+        }
+        sb.append("\n");
+    }
+
+    private static void addUnderLineEndTag(TextExtractOption option, StringBuffer sb, boolean underline) {
         if (underline) {
             ExtractorHelper.insertTag(option, sb, "</u>");
         }
@@ -386,8 +418,6 @@ public class ForParagraphList {
 
     private static void controlText(HWPChar ch, TextExtractOption option, StringBuffer sb) {
         switch (ch.getCode()) {
-            case 10:
-                addNewLine(option, sb);
             case 9:
                 if (option.isInsertTag()) {
                     ExtractorHelper.appendNormalStartTag(option, sb);
@@ -397,8 +427,11 @@ public class ForParagraphList {
                     ExtractorHelper.appendNormalEndTag(option, sb);
                 }
                 break;
+            case 10:
+                addNewLineTag(option, sb);
+                break;
             case 13:
-                addNewLine(option, sb);
+                addParaEndTag(option, sb);
                 break;
             case 24:
                 sb.append("_");

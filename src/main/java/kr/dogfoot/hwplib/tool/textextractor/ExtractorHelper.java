@@ -2,6 +2,9 @@ package kr.dogfoot.hwplib.tool.textextractor;
 
 public class ExtractorHelper {
 
+    public static void appendMarginTag(TextExtractOption option, StringBuffer sb, int marginLeft) {
+        insertTag(option, sb, "<span style=\"margin-left:" + marginLeft + "px;\"/>");
+    }
     public static void appendNormalStartTag(TextExtractOption option, StringBuffer sb) {
         insertTag(option, sb, "<span style=\"white-space: pre; vertical-align: baseline;\">");
     }
@@ -11,11 +14,9 @@ public class ExtractorHelper {
     }
 
     public static void appendEquationTag(TextExtractOption option, StringBuffer sb, String data) {
-        appendNormalStartTag(option, sb);
         insertTag(option, sb, "<equation>");
         sb.append(data);
         insertTag(option, sb, "</equation>");
-        appendNormalEndTag(option, sb);
     }
 
     public static void appendTableTag(TextExtractOption option, StringBuffer sb, String data) {

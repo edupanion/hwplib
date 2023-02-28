@@ -280,9 +280,6 @@ public class ForParagraphList {
                                  StringBuffer sb) throws UnsupportedEncodingException {
         if (option.isInsertParaHead() && paraHeadMaker != null) {
             String headString = paraHeadMaker.paraHeadString(p);
-            if (!headString.isEmpty()) {
-                sb.append("\n");
-            }
             sb.append(headString);
         }
 
@@ -293,23 +290,13 @@ public class ForParagraphList {
             final int leftMargin = DocInfoExtractor.getLeftMargin(shapeId);
             final boolean isAlignRight = DocInfoExtractor.isAlignRight(shapeId);
             final boolean isAlignCenter = DocInfoExtractor.isAlignCenter(shapeId);
-            final List<String> text = pt.getCharList().stream()
-                    .filter(it -> it instanceof HWPCharNormal)
-                    .map(it -> {
-                        try {
-                            return ((HWPCharNormal) it).getCh();
-                        } catch (UnsupportedEncodingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .collect(Collectors.toList());
             sb.append("<p style=\"margin: 0px 0px 0px 0px; line-height: 160.0%;");
             if (isAlignRight) {
                 sb.append(" text-align: right;");
             } else if (isAlignCenter) {
                 sb.append(" text-align: center;");
             }
-            sb.append("\">\n");
+            sb.append("\">");
             final ArrayList<CharPositionShapeIdPair> charShapeList = p.getCharShape().getPositonShapeIdPairList();
             HWPCharType lastType = null;
             int controlIndex = 0;
@@ -388,14 +375,12 @@ public class ForParagraphList {
         if (option.isInsertTag()) {
             sb.append("<br>");
         }
-        sb.append("\n");
     }
 
     private static void addParaEndTag(TextExtractOption option, StringBuffer sb) {
         if (option.isInsertTag()) {
             sb.append("</p>");
         }
-        sb.append("\n");
     }
 
     private static void addUnderLineEndTag(TextExtractOption option, StringBuffer sb, boolean underline) {

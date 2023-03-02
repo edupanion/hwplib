@@ -19,6 +19,9 @@ public class DocInfoExtractor {
     private static final ArrayList<ParaShape> paraShapeList = new ArrayList<>();
 
     public static void extract(DocInfo doc) {
+        charShapeList.clear();
+        borderFillList.clear();
+        paraShapeList.clear();
         charShapeList.addAll(doc.getCharShapeList());
         borderFillList.addAll(doc.getBorderFillList());
         paraShapeList.addAll(doc.getParaShapeList());

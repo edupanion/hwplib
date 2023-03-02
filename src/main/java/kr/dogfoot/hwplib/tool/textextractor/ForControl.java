@@ -116,7 +116,7 @@ public class ForControl {
                               StringBuffer sb) throws UnsupportedEncodingException {
         StringBuffer stringBuffer = new StringBuffer();
         for (Row r : table.getRowList()) {
-            ExtractorHelper.insertTag(option, stringBuffer, "<tr>\n");
+            ExtractorHelper.insertTag(option, stringBuffer, "<tr>");
             for (Cell c : r.getCellList()) {
                 final long borderFillId = c.getListHeader().getBorderFillId();
                 boolean hasSlash = DocInfoExtractor.hasSlash(borderFillId);
@@ -143,12 +143,12 @@ public class ForControl {
                         .append(" vertical-align: middle;")
                         .append("\" colspan=\"").append(c.getListHeader().getColSpan())
                         .append("\" rowspan=\"").append(c.getListHeader().getRowSpan())
-                        .append("\">\n");
+                        .append("\">");
                 ExtractorHelper.insertTag(option, stringBuffer, tabBuilder.toString());
                 ForParagraphList.extract(c.getParagraphList(), option, paraHeadMaker, stringBuffer);
-                ExtractorHelper.insertTag(option, stringBuffer, "</td>\n");
+                ExtractorHelper.insertTag(option, stringBuffer, "</td>");
             }
-            ExtractorHelper.insertTag(option, stringBuffer, "</tr>\n");
+            ExtractorHelper.insertTag(option, stringBuffer, "</tr>");
         }
         ExtractorHelper.appendTableTag(option, sb, stringBuffer.toString());
     }

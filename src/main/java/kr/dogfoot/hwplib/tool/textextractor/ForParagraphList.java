@@ -235,10 +235,6 @@ public class ForParagraphList {
                         break;
                 }
             }
-
-            if (option.isAppendEndingLF()) {
-                sb.append("\n");
-            }
         }
 
         if (option.getMethod() == TextExtractMethod.AppendControlTextAfterParagraphText) {

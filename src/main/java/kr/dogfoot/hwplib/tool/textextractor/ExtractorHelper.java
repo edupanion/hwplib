@@ -20,7 +20,7 @@ public class ExtractorHelper {
     }
 
     public static void appendTableTag(TextExtractOption option, StringBuffer sb, String data) {
-        insertTag(option, sb, "<br><table>");
+        insertTag(option, sb, "<table>");
         sb.append(data);
         insertTag(option, sb, "</table>");
     }

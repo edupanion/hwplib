@@ -9,6 +9,8 @@ import kr.dogfoot.hwplib.tool.textextractor.paraHead.ParaHeadMaker;
 import kr.dogfoot.hwplib.util.ColorUtil;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 컨트롤을 위한 텍스트 추출기 객체
@@ -115,6 +117,26 @@ public class ForControl {
                               ParaHeadMaker paraHeadMaker,
                               StringBuffer sb) throws UnsupportedEncodingException {
         StringBuffer stringBuffer = new StringBuffer();
+        if (table.getRowList().isEmpty()) {
+            return;
+        }
+
+        ExtractorHelper.insertTag(option, stringBuffer, "<colgroup>");
+        int totalCellWidth = 0;
+        List<Long> cellWidthList = new ArrayList();
+        for (Cell c : table.getRowList().get(0).getCellList()) {
+            final int cellCount = c.getListHeader().getColSpan();
+            final long cellWidth = c.getListHeader().getWidth();
+            totalCellWidth += cellWidth;
+            for (int i = 0; i < cellCount; i++) {
+                cellWidthList.add(cellWidth / cellCount);
+            }
+        }
+        for (long cellWidth : cellWidthList) {
+            ExtractorHelper.insertTag(option, stringBuffer, "<col width=\"" + (cellWidth * 100 / totalCellWidth) + "%\"/>");
+        }
+        ExtractorHelper.insertTag(option, stringBuffer, "</colgroup>");
+
         for (Row r : table.getRowList()) {
             ExtractorHelper.insertTag(option, stringBuffer, "<tr>");
             for (Cell c : r.getCellList()) {

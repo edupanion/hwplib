@@ -6,7 +6,7 @@ public class ExtractorHelper {
         insertTag(option, sb, "<span style=\"margin-left:" + marginLeft + "px;\"/>");
     }
     public static void appendNormalStartTag(TextExtractOption option, StringBuffer sb) {
-        insertTag(option, sb, "<span style=\"vertical-align: baseline;\">");
+        insertTag(option, sb, "<span>");
     }
 
     public static void appendNormalEndTag(TextExtractOption option, StringBuffer sb) {

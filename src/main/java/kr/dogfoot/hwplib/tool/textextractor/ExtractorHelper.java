@@ -14,9 +14,9 @@ public class ExtractorHelper {
     }
 
     public static void appendEquationTag(TextExtractOption option, StringBuffer sb, String data) {
-        insertTag(option, sb, "<equation>");
+        insertTag(option, sb, "<span id=\"equation\">");
         sb.append(data);
-        insertTag(option, sb, "</equation>");
+        insertTag(option, sb, "</span>");
     }
 
     public static void appendTableTag(TextExtractOption option, StringBuffer sb, String data) {

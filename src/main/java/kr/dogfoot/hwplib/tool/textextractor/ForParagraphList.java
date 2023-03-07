@@ -13,6 +13,7 @@ import kr.dogfoot.hwplib.tool.textextractor.paraHead.ParaHeadMaker;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -394,7 +395,12 @@ public class ForParagraphList {
      * @throws UnsupportedEncodingException
      */
     private static void normalText(HWPChar ch, StringBuffer sb) throws UnsupportedEncodingException {
-        sb.append(((HWPCharNormal) ch).getCh());
+        final String character = ((HWPCharNormal) ch).getCh();
+        if (Objects.equals(character, " ")) {
+            sb.append("&nbsp;");
+        } else {
+            sb.append(character);
+        }
     }
 
     private static void controlText(HWPChar ch, TextExtractOption option, StringBuffer sb) {
@@ -403,7 +409,7 @@ public class ForParagraphList {
                 if (option.isInsertTag()) {
                     ExtractorHelper.appendNormalStartTag(option, sb);
                 }
-                sb.append("\t");
+                sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
                 if (option.isInsertTag()) {
                     ExtractorHelper.appendNormalEndTag(option, sb);
                 }

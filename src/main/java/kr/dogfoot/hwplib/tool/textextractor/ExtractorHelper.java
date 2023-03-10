@@ -15,7 +15,7 @@ public class ExtractorHelper {
 
     public static void appendEquationTag(TextExtractOption option, StringBuffer sb, String data) {
         insertTag(option, sb, "<span id=\"equation\">");
-        sb.append(data.replaceAll("<", "\\\\lt ").replaceAll(">", "\\\\gt "));
+        sb.append(data.replaceAll("<( *)g", "<\\\\\\\\g"));
         insertTag(option, sb, "</span>");
     }
 

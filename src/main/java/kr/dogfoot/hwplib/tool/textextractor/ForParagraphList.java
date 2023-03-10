@@ -9,6 +9,7 @@ import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPCharNormal;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.text.HWPCharType;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.text.ParaText;
 import kr.dogfoot.hwplib.tool.textextractor.paraHead.ParaHeadMaker;
+import kr.dogfoot.hwplib.util.SizeUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -303,7 +304,7 @@ public class ForParagraphList {
             for (int i = 0; i < pt.getCharList().size(); i++) {
                 final HWPChar ch = pt.getCharList().get(i);
                 if (isFirstChildOfLine) {
-                    int marginLeft = (line == 0 ? leftMargin : leftMargin - indent) / 150;
+                    int marginLeft = SizeUtil.pointToPixel(line == 0 ? leftMargin : leftMargin - indent);
                     if (marginLeft > 0) {
                         ExtractorHelper.appendMarginTag(option, sb, marginLeft);
                     }

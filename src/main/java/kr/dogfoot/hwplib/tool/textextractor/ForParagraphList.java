@@ -400,9 +400,9 @@ public class ForParagraphList {
         if (Objects.equals(character, " ")) {
             sb.append("&nbsp;");
         } else if (Objects.equals(character, "<")) {
-            sb.append("\\lt ");
+            sb.append("&lt;");
         } else if (Objects.equals(character, ">")) {
-            sb.append("\\gt ");
+            sb.append("&gt;");
         } else {
             sb.append(character);
         }

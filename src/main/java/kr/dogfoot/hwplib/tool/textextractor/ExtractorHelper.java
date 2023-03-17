@@ -7,14 +7,11 @@ public class ExtractorHelper {
     private static Pattern ltPattern = Pattern.compile("<( *)?([^-<])");
     private static Pattern gtPattern = Pattern.compile("([^->])( *)?>");
 
-    public static void appendMarginTag(TextExtractOption option, StringBuffer sb, int marginLeft) {
-        insertTag(option, sb, "<span style=\"margin-left:" + marginLeft + "px;\"/>");
-    }
-    public static void appendNormalStartTag(TextExtractOption option, StringBuffer sb) {
+    public static void appendSpanStartTag(TextExtractOption option, StringBuffer sb) {
         insertTag(option, sb, "<span>");
     }
 
-    public static void appendNormalEndTag(TextExtractOption option, StringBuffer sb) {
+    public static void appendSpanEndTag(TextExtractOption option, StringBuffer sb) {
         insertTag(option, sb, "</span>");
     }
 

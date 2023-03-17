@@ -298,22 +298,22 @@ public class ForParagraphList {
             final ArrayList<CharPositionShapeIdPair> charShapeList = p.getCharShape().getPositonShapeIdPairList();
             HWPCharType lastType = null;
             int controlIndex = 0;
-            int line = 0;
+            int lineIndex = 0;
+            int lineFirstCharIndex = 0;
+            int marginLeft = 0;
             boolean underline = false;
             boolean isFirstChildOfLine = true;
             for (int i = 0; i < pt.getCharList().size(); i++) {
                 final HWPChar ch = pt.getCharList().get(i);
                 if (isFirstChildOfLine) {
-                    int marginLeft = SizeUtil.pointToPixel(line == 0 ? leftMargin : leftMargin - indent);
-                    if (marginLeft > 0) {
-                        ExtractorHelper.appendMarginTag(option, sb, marginLeft);
-                    }
+                    lineFirstCharIndex = sb.length();
+                    marginLeft = SizeUtil.pointToPixel(lineIndex == 0 ? leftMargin : leftMargin - indent);
                     isFirstChildOfLine = false;
                 }
                 switch (ch.getType()) {
                     case Normal:
                         if (lastType != HWPCharType.Normal) {
-                            ExtractorHelper.appendNormalStartTag(option, sb);
+                            ExtractorHelper.appendSpanStartTag(option, sb);
                         }
                         final int index = i;
                         final List<CharPositionShapeIdPair> shapeList = charShapeList.stream().filter((charShape) -> charShape.getPosition() == index).collect(Collectors.toList());
@@ -338,9 +338,29 @@ public class ForParagraphList {
                                 addUnderLineEndTag(option, sb, underline);
                             }
                             if (ch.isLineBreak()) {
-                                line++;
+                                lineIndex++;
                                 isFirstChildOfLine = true;
                             }
+                            String lineText = sb.substring(lineFirstCharIndex, sb.length());
+                            String span = "<span style=\"";
+                            boolean wrap = false;
+                            if (lineText.contains("img")) {
+                                wrap = true;
+                                span += "display: flex; ";
+                            }
+                            if (marginLeft > 0) {
+                                wrap = true;
+                                span += "margin-left: " + marginLeft + "px;";
+                            }
+                            span += "\">";
+
+                            if (wrap) {
+                                sb.delete(lineFirstCharIndex, sb.length());
+                                ExtractorHelper.insertTag(option, sb, span);
+                                sb.append(lineText);
+                                ExtractorHelper.appendSpanEndTag(option, sb);
+                            }
+
                             controlText(ch, option, sb);
                         }
                         break;
@@ -385,7 +405,7 @@ public class ForParagraphList {
         if (underline) {
             ExtractorHelper.insertTag(option, sb, "</u>");
         }
-        ExtractorHelper.appendNormalEndTag(option, sb);
+        ExtractorHelper.appendSpanEndTag(option, sb);
     }
 
     /**
@@ -411,9 +431,9 @@ public class ForParagraphList {
     private static void controlText(HWPChar ch, TextExtractOption option, StringBuffer sb) {
         switch (ch.getCode()) {
             case 9:
-                ExtractorHelper.appendNormalStartTag(option, sb);
+                ExtractorHelper.appendSpanStartTag(option, sb);
                 sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
-                ExtractorHelper.appendNormalEndTag(option, sb);
+                ExtractorHelper.appendSpanEndTag(option, sb);
                 break;
             case 10:
                 addNewLineTag(option, sb);

@@ -352,7 +352,7 @@ public class ForParagraphList {
                                 wrap = true;
                                 span += "margin-left: " + marginLeft + "px;";
                             }
-                            span += "\">";
+                            span += " align-items: center;\">";
 
                             if (wrap) {
                                 sb.delete(lineFirstCharIndex, sb.length());

@@ -150,15 +150,14 @@ public class ForControl {
                 final boolean isTopBorderEmpty = DocInfoExtractor.isTopBorderEmpty(borderFillId);
                 final boolean isBottomBorderEmpty = DocInfoExtractor.isBottomBorderEmpty(borderFillId);
                 final StringBuilder tabBuilder = new StringBuilder();
-                tabBuilder.append("<td");
+                tabBuilder.append("<td style=\"");
                 if (hasSlash) {
-                    tabBuilder.append(" class=\"slash\"");
+                    tabBuilder.append("background-image: linear-gradient(to top right,  transparent calc(50% - 0.5px), black, transparent calc(50% + 0.5px)); ");
                 }
                 if (hasBackSlash) {
-                    tabBuilder.append(" class=\"backslash\"");
+                    tabBuilder.append("background-image: linear-gradient(to top left,  transparent calc(50% - 0.5px), black, transparent calc(50% + 0.5px)); ");
                 }
-                tabBuilder.append(" style=\"")
-                        .append("background-color: ").append(ColorUtil.convertToString(color)).append(";")
+                tabBuilder.append("background-color: ").append(ColorUtil.convertToString(color)).append(";")
                         .append(" padding: ")
                         .append(SizeUtil.pointToPixel(c.getListHeader().getTopMargin()) + 4).append("px ")
                         .append(SizeUtil.pointToPixel(c.getListHeader().getBottomMargin()) + 4).append("px ")

@@ -28,7 +28,7 @@ public class ExtractorHelper {
     }
 
     public static void appendTableTag(TextExtractOption option, StringBuffer sb, String data) {
-        insertTag(option, sb, "<table>");
+        insertTag(option, sb, "<table style=\"border-collapse: collapse;\" width=\"100%\">");
         sb.append(data);
         insertTag(option, sb, "</table>");
     }

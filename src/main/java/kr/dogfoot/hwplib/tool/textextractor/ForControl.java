@@ -152,10 +152,10 @@ public class ForControl {
                 final StringBuilder tabBuilder = new StringBuilder();
                 tabBuilder.append("<td style=\"");
                 if (hasSlash) {
-                    tabBuilder.append("background-image: linear-gradient(to top right,  transparent calc(50% - 0.5px), black, transparent calc(50% + 0.5px)); ");
+                    tabBuilder.append("background-image: linear-gradient(to top left,  transparent calc(50% - 1px), black, transparent calc(50% + 1px)); ");
                 }
                 if (hasBackSlash) {
-                    tabBuilder.append("background-image: linear-gradient(to top left,  transparent calc(50% - 0.5px), black, transparent calc(50% + 0.5px)); ");
+                    tabBuilder.append("background-image: linear-gradient(to top right,  transparent calc(50% - 1px), black, transparent calc(50% + 1px)); ");
                 }
                 tabBuilder.append("background-color: ").append(ColorUtil.convertToString(color)).append(";")
                         .append(" padding: ")

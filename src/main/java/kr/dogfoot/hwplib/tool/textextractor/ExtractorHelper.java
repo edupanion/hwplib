@@ -33,8 +33,9 @@ public class ExtractorHelper {
         insertTag(option, sb, "</table>");
     }
 
-    public static void appendImageTag(TextExtractOption option, StringBuffer sb, int data) {
-        insertTag(option, sb, "<img src=");
+    public static void appendImageTag(TextExtractOption option, StringBuffer sb, int data, long width, long height) {
+        insertTag(option, sb, "<img width=\"" + hwpToPx(width) + "\" height=\"" + hwpToPx(height) + "\"");
+        insertTag(option, sb, " src=");
         sb.append(data);
         insertTag(option, sb, ">");
     }
@@ -58,5 +59,9 @@ public class ExtractorHelper {
             convertedText = convertedText.replace(matcherText, gtMatcher.group(1) + "&gt;");
         }
         sb.append(convertedText);
+    }
+
+    private static long hwpToPx(double hwp) {
+        return (long) (hwp / (72000.0f / 254.0f / 4.f) + 0.5f);
     }
 }

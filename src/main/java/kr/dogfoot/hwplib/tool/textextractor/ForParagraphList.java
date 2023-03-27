@@ -342,23 +342,25 @@ public class ForParagraphList {
                                 isFirstChildOfLine = true;
                             }
                             String lineText = sb.substring(lineFirstCharIndex, sb.length());
-                            String span = "<span style=\"";
-                            boolean wrap = false;
-                            if (lineText.contains("img")) {
-                                wrap = true;
-                                span += "display: flex; ";
-                            }
-                            if (marginLeft > 0) {
-                                wrap = true;
-                                span += "margin-left: " + marginLeft + "px;";
-                            }
-                            span += " align-items: center;\">";
+                            if (!lineText.contains("img") || lineText.contains("span")) {
+                                String span = "<span style=\"";
+                                boolean wrap = false;
+                                if (lineText.contains("img")) {
+                                    wrap = true;
+                                    span += "display: flex; ";
+                                }
+                                if (marginLeft > 0) {
+                                    wrap = true;
+                                    span += "margin-left: " + marginLeft + "px;";
+                                }
+                                span += " align-items: center;\">";
 
-                            if (wrap) {
-                                sb.delete(lineFirstCharIndex, sb.length());
-                                ExtractorHelper.insertTag(option, sb, span);
-                                sb.append(lineText);
-                                ExtractorHelper.appendSpanEndTag(option, sb);
+                                if (wrap) {
+                                    sb.delete(lineFirstCharIndex, sb.length());
+                                    ExtractorHelper.insertTag(option, sb, span);
+                                    sb.append(lineText);
+                                    ExtractorHelper.appendSpanEndTag(option, sb);
+                                }
                             }
 
                             controlText(ch, option, sb);

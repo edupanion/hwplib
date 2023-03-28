@@ -288,13 +288,13 @@ public class ForParagraphList {
             final int leftMargin = DocInfoExtractor.getLeftMargin(shapeId);
             final boolean isAlignRight = DocInfoExtractor.isAlignRight(shapeId);
             final boolean isAlignCenter = DocInfoExtractor.isAlignCenter(shapeId);
-            sb.append("<p style=\"line-height: 1.6;");
+            sb.append("<p style=\"line-height: 1.6;\"");
             if (isAlignRight) {
-                sb.append(" text-align: right;");
+                sb.append(" align=\"right\"");
             } else if (isAlignCenter) {
-                sb.append(" text-align: center;");
+                sb.append(" align=\"center\"");
             }
-            sb.append("\">");
+            sb.append(">");
             final ArrayList<CharPositionShapeIdPair> charShapeList = p.getCharShape().getPositonShapeIdPairList();
             HWPCharType lastType = null;
             int controlIndex = 0;

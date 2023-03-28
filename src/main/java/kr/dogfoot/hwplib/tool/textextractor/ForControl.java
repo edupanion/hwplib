@@ -159,10 +159,10 @@ public class ForControl {
                 }
                 tabBuilder.append("background-color: ").append(ColorUtil.convertToString(color)).append(";")
                         .append(" padding: ")
-                        .append(SizeUtil.pointToPixel(c.getListHeader().getTopMargin()) + 4).append("px ")
-                        .append(SizeUtil.pointToPixel(c.getListHeader().getBottomMargin()) + 4).append("px ")
-                        .append(SizeUtil.pointToPixel(c.getListHeader().getRightMargin()) + 2).append("px ")
-                        .append(SizeUtil.pointToPixel(c.getListHeader().getLeftMargin()) + 2).append("px;")
+                        .append(SizeUtil.marginToPx(c.getListHeader().getTopMargin()) + 4).append("px ")
+                        .append(SizeUtil.marginToPx(c.getListHeader().getBottomMargin()) + 4).append("px ")
+                        .append(SizeUtil.marginToPx(c.getListHeader().getRightMargin()) + 2).append("px ")
+                        .append(SizeUtil.marginToPx(c.getListHeader().getLeftMargin()) + 2).append("px;")
                         .append(" border-left: ").append((isLeftBorderEmpty ? 0 : "1px solid #000000")).append(";")
                         .append(" border-top: ").append((isTopBorderEmpty ? 0 : "1px solid #000000")).append(";")
                         .append(" border-right: ").append((isRightBorderEmpty ? 0 : "1px solid #000000")).append(";")
@@ -177,7 +177,12 @@ public class ForControl {
             }
             ExtractorHelper.insertTag(option, stringBuffer, "</tr>");
         }
-        ExtractorHelper.appendTableTag(option, sb, stringBuffer.toString());
+
+        int marginLeft = table.getHeader().getOutterMarginLeft();
+        int marginTop = table.getHeader().getOutterMarginTop();
+        int marginRight = table.getHeader().getOutterMarginRight();
+        int marginBottom = table.getHeader().getOutterMarginBottom();
+        ExtractorHelper.appendTableTag(option, sb, stringBuffer.toString(), marginLeft, marginTop, marginRight, marginBottom);
     }
 
     /**

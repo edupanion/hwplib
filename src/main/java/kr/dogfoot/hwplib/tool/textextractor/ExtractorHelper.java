@@ -1,5 +1,7 @@
 package kr.dogfoot.hwplib.tool.textextractor;
 
+import kr.dogfoot.hwplib.util.SizeUtil;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,14 +29,20 @@ public class ExtractorHelper {
         }
     }
 
-    public static void appendTableTag(TextExtractOption option, StringBuffer sb, String data) {
-        insertTag(option, sb, "<table style=\"border-collapse: collapse;\" width=\"100%\">");
+    public static void appendTableTag(TextExtractOption option, StringBuffer sb, String data, int marginLeft, int marginTop, int marginRight, int marginBottom) {
+        insertTag(option, sb, "<table style=\"border-collapse: collapse; margin-left:"
+                + SizeUtil.imageSizeToPx(marginLeft) + "px; margin-top:"
+                + SizeUtil.imageSizeToPx(marginTop) + "px; margin-right:"
+                + SizeUtil.imageSizeToPx(marginRight) + "px; margin-bottom:"
+                + SizeUtil.imageSizeToPx(marginBottom) + "px;\" width=\"100%\">");
         sb.append(data);
         insertTag(option, sb, "</table>");
     }
 
     public static void appendImageTag(TextExtractOption option, StringBuffer sb, int data, long width, long height) {
-        insertTag(option, sb, "<img width=\"" + hwpToPx(width) + "\" height=\"" + hwpToPx(height) + "\"");
+        insertTag(option, sb, "<img width=\""
+                + SizeUtil.imageSizeToPx(width) + "\" height=\""
+                + SizeUtil.imageSizeToPx(height) + "\"");
         insertTag(option, sb, " src=");
         sb.append(data);
         insertTag(option, sb, ">");
@@ -58,10 +66,6 @@ public class ExtractorHelper {
             final String matcherText = gtMatcher.group();
             convertedText = convertedText.replace(matcherText, gtMatcher.group(1) + "&gt;");
         }
-        sb.append(convertedText);
-    }
-
-    private static long hwpToPx(double hwp) {
-        return (long) (hwp / (72000.0f / 254.0f / 4.f) + 0.5f);
+        sb.append(convertedText.replaceAll(" le ", " &lt; ").replaceAll(" ge ", " &gt; "));
     }
 }

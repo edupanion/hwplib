@@ -307,7 +307,7 @@ public class ForParagraphList {
                 final HWPChar ch = pt.getCharList().get(i);
                 if (isFirstChildOfLine) {
                     lineFirstCharIndex = sb.length();
-                    marginLeft = SizeUtil.pointToPixel(lineIndex == 0 ? leftMargin : leftMargin - indent);
+                    marginLeft = SizeUtil.marginToPx(lineIndex == 0 ? leftMargin : leftMargin - indent);
                     isFirstChildOfLine = false;
                 }
                 switch (ch.getType()) {

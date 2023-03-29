@@ -8,9 +8,12 @@ import java.util.regex.Pattern;
 public class ExtractorHelper {
     private static Pattern ltPattern = Pattern.compile("<( *)?([^-<])");
     private static Pattern gtPattern = Pattern.compile("([^->])( *)?>");
-    private static Pattern leTextPattern = Pattern.compile(" le ", Pattern.CASE_INSENSITIVE);
-    private static Pattern geTextPattern = Pattern.compile(" ge ", Pattern.CASE_INSENSITIVE);
+    private static Pattern leqTextPattern = Pattern.compile("leq", Pattern.CASE_INSENSITIVE);
+    private static Pattern leTextPattern = Pattern.compile("(ang)?le(ft)?", Pattern.CASE_INSENSITIVE);
+    private static Pattern ltTextPattern = Pattern.compile("lt");
+    private static Pattern geTextPattern = Pattern.compile("ge");
     private static Pattern geqTextPattern = Pattern.compile("geq", Pattern.CASE_INSENSITIVE);
+    private static Pattern gtTextPattern = Pattern.compile("gt");
 
     public static void appendSpanStartTag(TextExtractOption option, StringBuffer sb) {
         insertTag(option, sb, "<span>");
@@ -59,19 +62,29 @@ public class ExtractorHelper {
 
     private static void addEquation(StringBuffer sb, String data) {
         String convertedText = data;
-        Matcher ltMatcher = ltPattern.matcher(data);
+        convertedText = leqTextPattern.matcher(convertedText).replaceAll("le");
+        Matcher leMatcher = leTextPattern.matcher(convertedText);
+        while (leMatcher.find()) {
+            final String matcherText = leMatcher.group();
+            if (leMatcher.group(1) == null && leMatcher.group(2) == null) {
+                convertedText = convertedText.replace(matcherText, "&le;");
+            }
+        }
+        convertedText = ltTextPattern.matcher(convertedText).replaceAll("&lt;");
+        convertedText = geqTextPattern.matcher(convertedText).replaceAll("ge");
+        convertedText = geTextPattern.matcher(convertedText).replaceAll("&ge;");
+        convertedText = gtTextPattern.matcher(convertedText).replaceAll("&gt;");
+
+        Matcher ltMatcher = ltPattern.matcher(convertedText);
         while (ltMatcher.find()) {
             final String matcherText = ltMatcher.group();
             convertedText = convertedText.replace(matcherText, "&lt; " + ltMatcher.group(2));
         }
-        Matcher gtMatcher = gtPattern.matcher(data);
+        Matcher gtMatcher = gtPattern.matcher(convertedText);
         while (gtMatcher.find()) {
             final String matcherText = gtMatcher.group();
             convertedText = convertedText.replace(matcherText, gtMatcher.group(1) + "&gt;");
         }
-        convertedText = leTextPattern.matcher(convertedText).replaceAll(" &lt; ");
-        convertedText = geqTextPattern.matcher(convertedText).replaceAll(" &gE; ");
-        convertedText = geTextPattern.matcher(convertedText).replaceAll(" &gt; ");
         sb.append(convertedText);
     }
 }

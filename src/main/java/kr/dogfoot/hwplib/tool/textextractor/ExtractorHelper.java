@@ -8,6 +8,9 @@ import java.util.regex.Pattern;
 public class ExtractorHelper {
     private static Pattern ltPattern = Pattern.compile("<( *)?([^-<])");
     private static Pattern gtPattern = Pattern.compile("([^->])( *)?>");
+    private static Pattern leTextPattern = Pattern.compile(" le ", Pattern.CASE_INSENSITIVE);
+    private static Pattern geTextPattern = Pattern.compile(" ge ", Pattern.CASE_INSENSITIVE);
+    private static Pattern geqTextPattern = Pattern.compile("geq", Pattern.CASE_INSENSITIVE);
 
     public static void appendSpanStartTag(TextExtractOption option, StringBuffer sb) {
         insertTag(option, sb, "<span>");
@@ -66,6 +69,9 @@ public class ExtractorHelper {
             final String matcherText = gtMatcher.group();
             convertedText = convertedText.replace(matcherText, gtMatcher.group(1) + "&gt;");
         }
-        sb.append(convertedText.replaceAll(" le ", " &lt; ").replaceAll(" ge ", " &gt; "));
+        convertedText = leTextPattern.matcher(convertedText).replaceAll(" &lt; ");
+        convertedText = geqTextPattern.matcher(convertedText).replaceAll(" &gE; ");
+        convertedText = geTextPattern.matcher(convertedText).replaceAll(" &gt; ");
+        sb.append(convertedText);
     }
 }

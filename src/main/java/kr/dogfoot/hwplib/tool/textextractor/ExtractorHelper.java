@@ -1,7 +1,11 @@
 package kr.dogfoot.hwplib.tool.textextractor;
 
+import kr.dogfoot.hwplib.util.Pair;
 import kr.dogfoot.hwplib.util.SizeUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +13,7 @@ public class ExtractorHelper {
     private static Pattern ltPattern = Pattern.compile("<( *)?([^-<])");
     private static Pattern gtPattern = Pattern.compile("([^->])( *)?>");
     private static Pattern leqTextPattern = Pattern.compile("leq", Pattern.CASE_INSENSITIVE);
-    private static Pattern leTextPattern = Pattern.compile("(ang)?le(ft)?", Pattern.CASE_INSENSITIVE);
+    private static Pattern leTextPattern = Pattern.compile("(ang|bul)?(le)(ft|t)?", Pattern.CASE_INSENSITIVE);
     private static Pattern ltTextPattern = Pattern.compile("lt");
     private static Pattern geTextPattern = Pattern.compile("ge");
     private static Pattern geqTextPattern = Pattern.compile("geq", Pattern.CASE_INSENSITIVE);
@@ -60,15 +64,20 @@ public class ExtractorHelper {
         }
     }
 
-    private static void addEquation(StringBuffer sb, String data) {
+    public static void addEquation(StringBuffer sb, String data) {
         String convertedText = data;
         convertedText = leqTextPattern.matcher(convertedText).replaceAll("le");
         Matcher leMatcher = leTextPattern.matcher(convertedText);
+
+        final List<Pair> positions = new ArrayList<Pair>();
         while (leMatcher.find()) {
-            final String matcherText = leMatcher.group();
-            if (leMatcher.group(1) == null && leMatcher.group(2) == null) {
-                convertedText = convertedText.replace(matcherText, "&le;");
+            if (leMatcher.group(1) == null && leMatcher.group(3) == null) {
+                positions.add(new Pair(leMatcher.start(), leMatcher.end()));
             }
+        }
+        Collections.reverse(positions);
+        for (Pair position : positions) {
+            convertedText = convertedText.substring(0, position.getFirst()) + "&le;" + convertedText.substring(position.getSecond());
         }
         convertedText = ltTextPattern.matcher(convertedText).replaceAll("&lt;");
         convertedText = geqTextPattern.matcher(convertedText).replaceAll("ge");

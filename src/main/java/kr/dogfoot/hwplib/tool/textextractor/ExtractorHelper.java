@@ -14,7 +14,7 @@ public class ExtractorHelper {
     private static Pattern gtPattern = Pattern.compile("([^->])( *)?>");
     private static Pattern leqTextPattern = Pattern.compile("leq", Pattern.CASE_INSENSITIVE);
     private static Pattern leTextPattern = Pattern.compile("(ang|bul)?(le)(ft|t)?", Pattern.CASE_INSENSITIVE);
-    private static Pattern ltTextPattern = Pattern.compile("lt");
+    private static Pattern ltTextPattern = Pattern.compile("(de)?lt");
     private static Pattern geTextPattern = Pattern.compile("ge");
     private static Pattern geqTextPattern = Pattern.compile("geq", Pattern.CASE_INSENSITIVE);
     private static Pattern gtTextPattern = Pattern.compile("gt");
@@ -69,17 +69,29 @@ public class ExtractorHelper {
         convertedText = leqTextPattern.matcher(convertedText).replaceAll("le");
         Matcher leMatcher = leTextPattern.matcher(convertedText);
 
-        final List<Pair> positions = new ArrayList<Pair>();
+        final List<Pair> lePositions = new ArrayList<>();
         while (leMatcher.find()) {
             if (leMatcher.group(1) == null && leMatcher.group(3) == null) {
-                positions.add(new Pair(leMatcher.start(), leMatcher.end()));
+                lePositions.add(new Pair(leMatcher.start(), leMatcher.end()));
             }
         }
-        Collections.reverse(positions);
-        for (Pair position : positions) {
+        Collections.reverse(lePositions);
+        for (Pair position : lePositions) {
             convertedText = convertedText.substring(0, position.getFirst()) + "&le;" + convertedText.substring(position.getSecond());
         }
-        convertedText = ltTextPattern.matcher(convertedText).replaceAll("&lt;");
+
+        Matcher ltTextMatcher = ltTextPattern.matcher(convertedText);
+        final List<Pair> ltPositions = new ArrayList<>();
+        while (ltTextMatcher.find()) {
+            if (ltTextMatcher.group(1) == null) {
+                ltPositions.add(new Pair(ltTextMatcher.start(), ltTextMatcher.end()));
+            }
+        }
+        Collections.reverse(ltPositions);
+        for (Pair position : ltPositions) {
+            convertedText = convertedText.substring(0, position.getFirst()) + "&lt;" + convertedText.substring(position.getSecond());
+        }
+
         convertedText = geqTextPattern.matcher(convertedText).replaceAll("ge");
         convertedText = geTextPattern.matcher(convertedText).replaceAll("&ge;");
         convertedText = gtTextPattern.matcher(convertedText).replaceAll("&gt;");

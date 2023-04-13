@@ -13,7 +13,7 @@ public class ExtractorHelper {
     private static Pattern ltPattern = Pattern.compile("<( *)?([^-<])");
     private static Pattern gtPattern = Pattern.compile("([^->])( *)?>");
     private static Pattern leqTextPattern = Pattern.compile("leq", Pattern.CASE_INSENSITIVE);
-    private static Pattern leTextPattern = Pattern.compile("(ang|bul)?(le)(ft|t)?", Pattern.CASE_INSENSITIVE);
+    private static Pattern leTextPattern = Pattern.compile("(ang|bul|pi)?(le)(ft|t)?", Pattern.CASE_INSENSITIVE);
     private static Pattern ltTextPattern = Pattern.compile("(de)?lt");
     private static Pattern geTextPattern = Pattern.compile("ge");
     private static Pattern geqTextPattern = Pattern.compile("geq", Pattern.CASE_INSENSITIVE);

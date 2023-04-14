@@ -301,6 +301,7 @@ public class ForParagraphList {
             int lineIndex = 0;
             int lineFirstCharIndex = 0;
             int marginLeft = 0;
+            int lastEquationPosition = 0;
             boolean underline = false;
             boolean isFirstChildOfLine = true;
             for (int i = 0; i < pt.getCharList().size(); i++) {
@@ -315,7 +316,7 @@ public class ForParagraphList {
                         if (lastType != HWPCharType.Normal) {
                             ExtractorHelper.appendSpanStartTag(option, sb);
                         }
-                        final int index = i;
+                        final int index = i + lastEquationPosition;
                         final List<CharPositionShapeIdPair> shapeList = charShapeList.stream().filter((charShape) -> charShape.getPosition() == index).collect(Collectors.toList());
                         if (!shapeList.isEmpty()) {
                             final CharPositionShapeIdPair shape = shapeList.get(0);
@@ -367,6 +368,7 @@ public class ForParagraphList {
                         }
                         break;
                     case ControlExtend:
+                        lastEquationPosition = i;
                         if (lastType == HWPCharType.Normal) {
                             addUnderLineEndTag(option, sb, underline);
                         }

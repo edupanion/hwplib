@@ -288,7 +288,7 @@ public class ForParagraphList {
             final int leftMargin = DocInfoExtractor.getLeftMargin(shapeId);
             final boolean isAlignRight = DocInfoExtractor.isAlignRight(shapeId);
             final boolean isAlignCenter = DocInfoExtractor.isAlignCenter(shapeId);
-            sb.append("<p style=\"line-height: 1.6;\"");
+            sb.append("<p");
             if (isAlignRight) {
                 sb.append(" align=\"right\"");
             } else if (isAlignCenter) {

@@ -33,7 +33,7 @@ public class ExtractorHelper {
             if (i > 0) {
                 sb.append("<img src=\"https://img-wonriedu.cceapi.com/q/d1/52/q.53586/104.jpg\" style=\"width:18px; height:9px;\">");
             }
-            insertTag(option, sb, "<span id=\"equation\">");
+            insertTag(option, sb, "<span class=\"equation\">");
             addEquation(sb, equations[i]);
             insertTag(option, sb, "</span>");
         }

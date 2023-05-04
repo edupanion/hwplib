@@ -124,7 +124,7 @@ public class ForControl {
 
         ExtractorHelper.insertTag(option, stringBuffer, "<colgroup>");
         int totalCellWidth = 0;
-        List<Long> cellWidthList = new ArrayList();
+        List<Long> cellWidthList = new ArrayList<>();
         for (Cell c : table.getRowList().get(0).getCellList()) {
             final int cellCount = c.getListHeader().getColSpan();
             final long cellWidth = c.getListHeader().getWidth();
@@ -182,7 +182,7 @@ public class ForControl {
         int marginTop = table.getHeader().getOutterMarginTop();
         int marginRight = table.getHeader().getOutterMarginRight();
         int marginBottom = table.getHeader().getOutterMarginBottom();
-        ExtractorHelper.appendTableTag(option, sb, stringBuffer.toString(), marginLeft, marginTop, marginRight, marginBottom);
+        ExtractorHelper.appendTableTag(option, sb, stringBuffer.toString(), totalCellWidth, marginLeft, marginTop, marginRight, marginBottom);
     }
 
     /**

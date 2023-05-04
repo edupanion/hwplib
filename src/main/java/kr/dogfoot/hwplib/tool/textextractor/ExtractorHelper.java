@@ -39,12 +39,14 @@ public class ExtractorHelper {
         }
     }
 
-    public static void appendTableTag(TextExtractOption option, StringBuffer sb, String data, int marginLeft, int marginTop, int marginRight, int marginBottom) {
-        insertTag(option, sb, "<table style=\"border-collapse: collapse; margin-left:"
-                + SizeUtil.imageSizeToPx(marginLeft) + "px; margin-top:"
-                + SizeUtil.imageSizeToPx(marginTop) + "px; margin-right:"
-                + SizeUtil.imageSizeToPx(marginRight) + "px; margin-bottom:"
-                + SizeUtil.imageSizeToPx(marginBottom) + "px;\" width=\"100%\">");
+    public static void appendTableTag(TextExtractOption option, StringBuffer sb, String data, int totalCellWidth, int marginLeft, int marginTop, int marginRight, int marginBottom) {
+        insertTag(option, sb, "<table"
+                + " width=" + SizeUtil.tablePercent(totalCellWidth) + "%"
+                + " style=\"border-collapse: collapse;"
+                + " margin-left:" + SizeUtil.imageSizeToPx(marginLeft) + "px;"
+                + " margin-top:" + SizeUtil.imageSizeToPx(marginTop) + "px;"
+                + " margin-right:" + SizeUtil.imageSizeToPx(marginRight) + "px;"
+                + " margin-bottom:" + SizeUtil.imageSizeToPx(marginBottom) + "px;>");
         sb.append(data);
         insertTag(option, sb, "</table>");
     }

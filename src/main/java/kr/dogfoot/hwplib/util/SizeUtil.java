@@ -6,7 +6,15 @@ public class SizeUtil {
         return Math.round(point / 150.f);
     }
 
-    public static long imageSizeToPx(double hwp) {
-        return (long) (hwp / (72000.0f / 254.0f / 4.f) + 0.5f);
+    public static long imageSizeToPx(double point) {
+        return (long) (point / (72000.0f / 254.0f / 4.f) + 0.5f);
+    }
+
+    public static float getMm(int point) {
+        return point / (72000.0f / 254.0f) + 0.5f;
+    }
+
+    public static int tablePercent(int point) {
+        return Math.min((int) (getMm(point) / 0.8), 100);
     }
 }
